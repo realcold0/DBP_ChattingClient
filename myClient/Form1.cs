@@ -193,12 +193,40 @@ namespace myClient
 
         private void textBoxSearchMember_KeyDown(object sender, KeyEventArgs e)  //추가 승환
         {
+
+            
+            if (e.KeyCode == Keys.Return) //이름 찾기
+            {
+                treeView1.Nodes.Clear();
+                string query = string.Format("select * from 회원정보 where 이름 = '{0}';", textBoxSearchMember.Text);
+                ArrayList user = new ArrayList(DBManager.GetInstance().Select(query,"이름"));
+                ArrayList userTeamID = new ArrayList(DBManager.GetInstance().Select(query, "팀명ID"));
+                for (int i = 0; i<user.Count;i++)  //동명이인일수도 ;;
+                {
+                    treeView1.Nodes.Add(AddFunc.UserSearch(user[i].ToString(), Convert.ToInt32(userTeamID[i])));
+                }
+               
+            }
+            /*
+            if (e.KeyCode == Keys.Return)  //부서 찾기
+            {
+                treeView1.Nodes.Clear();
+                string query1 = string.Format("select 부서명 from 부서 where 부서명 = '{0}';", textBoxSearchMember.Text);
+                ArrayList department = new ArrayList(DBManager.GetInstance().Select(query1, "부서명")); 
+                for(int i = 0; i < department.Count; i++)
+                {
+                    treeView1.Nodes.Add(AddFunc.DepartmentSearch(department[i].ToString()));
+                }
+
+                
+            }
+            
             if (e.KeyCode == Keys.Return)
             {
                 treeView1.Nodes.Clear();
-                treeView1.Nodes.Add(AddFunc.UserSearch(textBoxSearchMember.Text));
+                treeView1.Nodes.Add(AddFunc.UserIDSearch(textBoxSearchMember.Text));
             }
-            
+            */
         }
     }
 }

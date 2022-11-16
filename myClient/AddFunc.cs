@@ -41,31 +41,69 @@ namespace myClient
 
             return treeNode;
         }
-        public static TreeNode UserSearch(string searchText)   //추가 승환
+        public static TreeNode UserSearch(string user, int userTeamID)   //추가 승환
         {
             
-            string searchInUser = string.Format("select * from 회원정보 where 이름 = '{0}';", searchText);
-            ArrayList user = new ArrayList(DBManager.GetInstance().Select(searchInUser, "이름"));
-            ArrayList userTeamID = new ArrayList(DBManager.GetInstance().Select(searchInUser, "팀명ID")); //팀 id 알아내기
-
+            string searchInUser = string.Format("select * from 회원정보 where 이름 = '{0}';", user);
             
             string searchDepart = string.Format("select 팀명, 부서.부서명 from 부서,`부서-팀` where 팀명ID = {0} and `부서-팀`.부서ID = 부서.부서ID", 
-                Convert.ToInt32(userTeamID[0])); //부서 찾기
+                userTeamID); //부서 찾기
             ArrayList searchDepartOFUser = new ArrayList(DBManager.GetInstance().Select(searchDepart, "부서명"));
             ArrayList userTeam = new ArrayList(DBManager.GetInstance().Select(searchDepart, "팀명"));
-
+            
 
             //유저 찾아서 팀명 확인 , 이팀이 어디 부서인지 확인 
             TreeNode treeNode = new TreeNode(searchDepartOFUser[0].ToString());
             treeNode.Nodes.Add(userTeam[0].ToString());
-            treeNode.Nodes[0].Nodes.Add(user[0].ToString());
+            treeNode.Nodes[0].Nodes.Add(user.ToString());
 
             return treeNode;
         }
 
-        public static TreeNode DepartmentSearch(string searchText)
+        public static TreeNode DepartmentSearch(string department) //부서 찾기
         {
+            TreeNode treeNode = new TreeNode(department);
+            //팀명이랑 팀id 찾기
+            string query1 = string.Format("select 팀명, 팀명ID from 부서,`부서-팀` where 부서명 = '{0}' and `부서-팀`.부서ID = 부서.부서ID", department);
+            ArrayList userTeam = new ArrayList(DBManager.GetInstance().Select(query1, "팀명"));
+            ArrayList userTeamID = new ArrayList(DBManager.GetInstance().Select(query1, "팀명ID"));
 
+            int teamid = 0;
+            
+            //팀에 속한 팀원들 불러오기
+            for(int i = 0; i < userTeam.Count; i++)
+            {
+                teamid = Convert.ToInt32(userTeamID[i]);
+                treeNode.Nodes.Add(userTeam[i].ToString());
+                string query2 = string.Format("select 이름 from 회원정보 where 팀명ID = '{0}'", teamid);
+                ArrayList user = new ArrayList(DBManager.GetInstance().Select(query2, "이름"));
+
+                for(int k = 0;k<user.Count;k++)
+                {
+                    treeNode.Nodes[i].Nodes.Add(user[k].ToString());
+                }
+            }
+            
+           
+            return treeNode;
+        }
+        public static TreeNode UserIDSearch(string userid) //유저 id로 찾기
+        {
+            //id에 맞는 회원 이름과 팀id
+            string query1 = string.Format("select * from 회원정보 where ID = '{0}';", userid);
+            ArrayList user = new ArrayList(DBManager.GetInstance().Select(query1, "이름"));
+            ArrayList userTeamID = new ArrayList(DBManager.GetInstance().Select(query1, "팀명ID"));
+
+            //팀id에 맞는 팀명과 부서명
+            string query2 = string.Format("select 팀명, 부서.부서명 from 부서,`부서-팀` where 팀명ID = {0} and `부서-팀`.부서ID = 부서.부서ID", userTeamID[0]);
+            ArrayList userTeam = new ArrayList(DBManager.GetInstance().Select(query2, "팀명"));
+            ArrayList userDepart = new ArrayList(DBManager.GetInstance().Select(query2, "부서명"));
+
+
+            TreeNode treeNode = new TreeNode(userDepart[0].ToString());
+            treeNode.Nodes.Add(userTeam[0].ToString());
+            treeNode.Nodes[0].Nodes.Add(user[0].ToString());
+            return treeNode;
         }
 
         // 채팅방 목록 추가
