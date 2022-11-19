@@ -12,6 +12,8 @@ namespace myClient
     internal class AddFunc
     {
         Form ClientForm;
+
+
         public AddFunc(Form clientForm)
         {
             ClientForm = clientForm;
@@ -125,25 +127,37 @@ namespace myClient
          */
         public string SplitMsg(string From, string To, string msg)// 추가(영주)
         {
-            string[] strings = msg.Split(" ");
-            if (strings[0] == From && strings[1] == To)
+            //string[] strings = msg.Split(" ");
+            List<string> list = new List<string>(msg.Split(" "));
+            string sendHost = list[0];
+            string receiveHost = list[1];
+            if (sendHost == From && receiveHost == To)
             {
-                int len = strings[0].Length + strings[1].Length + 1;
-                string subSTR = msg.Substring(0, len);
-                msg = msg.Replace(subSTR, "[나]");
+                //int len = list[0].Length + list[1].Length + 1;
+                //string subSTR = msg.Substring(0, len);
+                //msg = msg.Replace(subSTR, "[나]");
+                list.RemoveAt(0);
+                list.RemoveAt(0);
+                msg = "[나]" + string.Join(" ", list);
                 return msg;
             }
-            else if (strings[0] == To && strings[1] == From)
+            else if (sendHost == To && receiveHost == From)
             {
-                int len = strings[0].Length + strings[1].Length + 1;
-                string subSTR = msg.Substring(0, len);
-                msg = msg.Replace(subSTR, "[" + To + "]");
+                //int len = list[0].Length + list[1].Length + 1;
+                //string subSTR = msg.Substring(0, len);
+                //msg = msg.Replace(subSTR, "[" + To + "]");
+                list.RemoveAt(0);
+                list.RemoveAt(0);
+                msg = "[" + To + "]" + string.Join(" ", list);
                 return msg;
+            }
+            else if(sendHost != "Notice" && receiveHost == From)
+            {// 알림 출력의 경우
+                return "!!Notification!! " + sendHost;
             }
             else
             {
-                msg = string.Empty;
-                return msg;
+                return string.Empty;
             }
         }
     }

@@ -15,6 +15,7 @@ namespace myClient
         string ID;
         NetworkStream stream = default(NetworkStream);
         TcpClient client = new TcpClient();
+
         public ClientForm(string ID)
         {
             this.ID = ID;
@@ -60,6 +61,18 @@ namespace myClient
             AddFunc addFunc = new AddFunc(this);
             msg = addFunc.SplitMsg(ID, name.Text, msg); // 변경(영주): 채팅창 별로 나눠서 메세지 보여주기
             CheckForIllegalCrossThreadCalls = false;
+            
+            if (msg.Contains("!!Notification!!"))
+            { // 알림이 온 경우
+                string[] strlist = msg.Split(" ");
+                //Thread thread = new Thread(Alert);
+                //thread.IsBackground = true;
+                Alert(strlist[1]);
+                // 알림을 보내고 종료
+                // 알림을 보낸 후 추가 DB에 적응 시키는 작업을 추가해야함
+                return;
+            }
+
             if (msg != "")// 변경(영주): NULL이 아니라면 ChatLog.AppendText
             {
                 ChatLog.AppendText(msg + "\r\n");
@@ -193,8 +206,6 @@ namespace myClient
 
         private void textBoxSearchMember_KeyDown(object sender, KeyEventArgs e)  //추가 승환
         {
-
-            
             if (e.KeyCode == Keys.Return) //이름 찾기
             {
                 treeView1.Nodes.Clear();
@@ -217,16 +228,19 @@ namespace myClient
                 {
                     treeView1.Nodes.Add(AddFunc.DepartmentSearch(department[i].ToString()));
                 }
-
-                
             }
-            
             if (e.KeyCode == Keys.Return)
             {
                 treeView1.Nodes.Clear();
                 treeView1.Nodes.Add(AddFunc.UserIDSearch(textBoxSearchMember.Text));
             }
             */
+        }
+
+        public void Alert(string msg)
+        {
+            notify frm = new notify();
+            frm.showAlert(msg + "님에게서 메세지가 도착했습니다.");
         }
     }
 }
