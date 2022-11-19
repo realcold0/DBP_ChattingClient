@@ -146,5 +146,16 @@ namespace myClient
                 return msg;
             }
         }
+        public ArrayList ChatLoad(string From, string To) // 추가(영주): 대화내용 Load
+        {
+            string meID_query = string.Format("select * from 채팅방목록 where 보낸유저 = '{0}' and  받는유저 = '{1}';", From, To);
+            ArrayList meID = new ArrayList(DBManager.GetInstance().Select(meID_query, "채팅방ID"));
+            string youID_query = string.Format("select * from 채팅방목록 where 보낸유저 = '{0}' and  받는유저 = '{1}';", To, From);
+            ArrayList youID = new ArrayList(DBManager.GetInstance().Select(youID_query, "채팅방ID"));
+            string chat_query = string.Format("select * from 채팅 where 채팅방ID = '{0}' or 채팅방ID = '{1}';", meID[0].ToString(), youID[0].ToString());
+            ArrayList chat = new ArrayList(DBManager.GetInstance().Select(chat_query, "메시지내용"));
+
+            return chat;
+        }
     }
 }

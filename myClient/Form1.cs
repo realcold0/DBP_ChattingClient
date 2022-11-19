@@ -176,14 +176,31 @@ namespace myClient
             {
                 treeView1.Nodes.Add(addFunc.UserLoad(i, department[i].ToString())); 
             }
-            // 변경(영주): 
-            listBox1.DataSource = addFunc.ChatListLoad(ID); 
+            // 변경(영주): 대화목록 Load
+            listBox1.DataSource = addFunc.ChatListLoad(ID);
+            // 변경(영주): 대화내용 Load
+            ArrayList chat = new ArrayList(addFunc.ChatLoad(ID, name.Text));
+            for (int i = 0; i < chat.Count; i++)
+            {
+                string msg = addFunc.SplitMsg(ID, name.Text, chat[i].ToString());
+                ChatLog.AppendText(msg);
+            }
         }
+
         // 여기부터 코드 작성, 윗 부분에 변경 내용과 변경 중인 코드 표시되어 있습니다. (영주)
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            ChatLog.Clear();
             // 변경(영주): 채팅 상대의 이름 표시
             name.Text = listBox1.Text;
+            // 변경(영주): 대화내용 Load
+            AddFunc addFunc = new AddFunc(this);
+            ArrayList chat = new ArrayList(addFunc.ChatLoad(ID, name.Text));
+            for (int i = 0; i < chat.Count; i++)
+            {
+                string msg = addFunc.SplitMsg(ID, name.Text, chat[i].ToString());
+                ChatLog.AppendText(msg);
+            }
         }
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
@@ -193,8 +210,6 @@ namespace myClient
 
         private void textBoxSearchMember_KeyDown(object sender, KeyEventArgs e)  //추가 승환
         {
-
-            
             if (e.KeyCode == Keys.Return) //이름 찾기
             {
                 treeView1.Nodes.Clear();
