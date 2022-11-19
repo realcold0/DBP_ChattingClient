@@ -41,13 +41,15 @@
             this.label3 = new System.Windows.Forms.Label();
             this.name = new System.Windows.Forms.Label();
             this.textBoxSearchMember = new System.Windows.Forms.TextBox();
+            this.SearchText = new System.Windows.Forms.TextBox();
+            this.SearchBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // ChatLog
             // 
-            this.ChatLog.Location = new System.Drawing.Point(327, 27);
+            this.ChatLog.Location = new System.Drawing.Point(327, 56);
             this.ChatLog.Name = "ChatLog";
-            this.ChatLog.Size = new System.Drawing.Size(195, 218);
+            this.ChatLog.Size = new System.Drawing.Size(195, 189);
             this.ChatLog.TabIndex = 0;
             this.ChatLog.Text = "";
             // 
@@ -90,7 +92,7 @@
             // 
             // ConnBtn
             // 
-            this.ConnBtn.Location = new System.Drawing.Point(528, 26);
+            this.ConnBtn.Location = new System.Drawing.Point(528, 184);
             this.ConnBtn.Name = "ConnBtn";
             this.ConnBtn.Size = new System.Drawing.Size(75, 23);
             this.ConnBtn.TabIndex = 5;
@@ -160,11 +162,30 @@
             this.textBoxSearchMember.TabIndex = 12;
             this.textBoxSearchMember.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxSearchMember_KeyDown);
             // 
+            // SearchText
+            // 
+            this.SearchText.Location = new System.Drawing.Point(327, 27);
+            this.SearchText.Name = "SearchText";
+            this.SearchText.Size = new System.Drawing.Size(195, 23);
+            this.SearchText.TabIndex = 13;
+            // 
+            // SearchBtn
+            // 
+            this.SearchBtn.Location = new System.Drawing.Point(528, 27);
+            this.SearchBtn.Name = "SearchBtn";
+            this.SearchBtn.Size = new System.Drawing.Size(75, 23);
+            this.SearchBtn.TabIndex = 14;
+            this.SearchBtn.Text = "검색";
+            this.SearchBtn.UseVisualStyleBackColor = true;
+            this.SearchBtn.Click += new System.EventHandler(this.SearchBtn_Click);
+            // 
             // ClientForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(621, 296);
+            this.Controls.Add(this.SearchBtn);
+            this.Controls.Add(this.SearchText);
             this.Controls.Add(this.textBoxSearchMember);
             this.Controls.Add(this.name);
             this.Controls.Add(this.label3);
@@ -201,5 +222,7 @@
         private Label label3;
         private Label name;
         private TextBox textBoxSearchMember;
+        private TextBox SearchText;
+        private Button SearchBtn;
     }
 }

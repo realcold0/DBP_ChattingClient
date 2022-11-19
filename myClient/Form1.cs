@@ -179,7 +179,7 @@ namespace myClient
             // 변경(영주): 대화목록 Load
             listBox1.DataSource = addFunc.ChatListLoad(ID);
             // 변경(영주): 대화내용 Load
-            ArrayList chat = new ArrayList(addFunc.ChatLoad(ID, name.Text));
+            ArrayList chat = new ArrayList(addFunc.ChatLoadOrSearch(ID, name.Text, ""));
             for (int i = 0; i < chat.Count; i++)
             {
                 string msg = addFunc.SplitMsg(ID, name.Text, chat[i].ToString());
@@ -195,7 +195,7 @@ namespace myClient
             name.Text = listBox1.Text;
             // 변경(영주): 대화내용 Load
             AddFunc addFunc = new AddFunc(this);
-            ArrayList chat = new ArrayList(addFunc.ChatLoad(ID, name.Text));
+            ArrayList chat = new ArrayList(addFunc.ChatLoadOrSearch(ID, name.Text, ""));
             for (int i = 0; i < chat.Count; i++)
             {
                 string msg = addFunc.SplitMsg(ID, name.Text, chat[i].ToString());
@@ -242,6 +242,18 @@ namespace myClient
                 treeView1.Nodes.Add(AddFunc.UserIDSearch(textBoxSearchMember.Text));
             }
             */
+        }
+
+        private void SearchBtn_Click(object sender, EventArgs e)
+        {
+            ChatLog.Clear();
+            AddFunc addFunc = new AddFunc(this);
+            ArrayList chat = new ArrayList(addFunc.ChatLoadOrSearch(ID, name.Text, SearchText.Text));
+            for (int i = 0; i < chat.Count; i++)
+            {
+                string msg = addFunc.SplitMsg(ID, name.Text, chat[i].ToString());
+                ChatLog.AppendText(msg);
+            }
         }
     }
 }
